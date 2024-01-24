@@ -183,7 +183,6 @@ map.forEach((row, i) => {
                     })
                 )
                 break
-
             case '[':
                 boundries.push(
                     new Boundary({
@@ -195,6 +194,7 @@ map.forEach((row, i) => {
                     })
                 )
                 break
+
             case ']':
                 boundries.push(
                     new Boundary({
@@ -202,10 +202,11 @@ map.forEach((row, i) => {
                             x: j * Boundary.width,
                             y: i * Boundary.height
                         },
-                        image: createImage('./img/capRight.png')
+                        image: createImage('./img/capright.png')
                     })
                 )
                 break
+
             case '_':
                 boundries.push(
                     new Boundary({
@@ -228,6 +229,7 @@ map.forEach((row, i) => {
                     })
                 )
                 break
+
             case '+':
                 boundries.push(
                     new Boundary({
@@ -239,6 +241,7 @@ map.forEach((row, i) => {
                     })
                 )
                 break
+
             case '5':
                 boundries.push(
                     new Boundary({
@@ -246,11 +249,11 @@ map.forEach((row, i) => {
                             x: j * Boundary.width,
                             y: i * Boundary.height
                         },
-                        color: 'blue',
                         image: createImage('./img/pipeConnectorTop.png')
                     })
                 )
                 break
+
             case '6':
                 boundries.push(
                     new Boundary({
@@ -258,11 +261,11 @@ map.forEach((row, i) => {
                             x: j * Boundary.width,
                             y: i * Boundary.height
                         },
-                        color: 'blue',
                         image: createImage('./img/pipeConnectorRight.png')
                     })
                 )
                 break
+
             case '7':
                 boundries.push(
                     new Boundary({
@@ -270,11 +273,11 @@ map.forEach((row, i) => {
                             x: j * Boundary.width,
                             y: i * Boundary.height
                         },
-                        color: 'blue',
                         image: createImage('./img/pipeConnectorBottom.png')
                     })
                 )
                 break
+
             case '8':
                 boundries.push(
                     new Boundary({
@@ -283,16 +286,6 @@ map.forEach((row, i) => {
                             y: i * Boundary.height
                         },
                         image: createImage('./img/pipeConnectorLeft.png')
-                    })
-                )
-                break
-            case '.':
-                boundries.push(
-                    new Boundary({
-                        position: {
-                            x: j * Boundary.width + Boundary.width / 2,
-                            y: i * Boundary.height + Boundary.height / 2
-                        }
                     })
                 )
                 break
