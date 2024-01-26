@@ -97,6 +97,17 @@ const ghosts = [
             x: Ghost.speed,
             y: 0
         }
+    }),
+    new Ghost({
+        position: {
+            x: Boundary.width * 6 + Boundary.width / 2,
+            y: Boundary.height * 3 + Boundary.height / 2
+        },
+        velocity: {
+            x: Ghost.speed,
+            y: 0
+        },
+        color: 'pink'
     })
 ]
 
@@ -371,8 +382,9 @@ function circleCollideWithRectangle({
     )
 }
 
+let animationId
 function animate() {
-    requestAnimationFrame(animate)
+    animationId = requestAnimationFrame(animate)
     c.clearRect(0, 0, canvas.width, canvas.height)
 
     if (keys.w.pressed && lastKey === 'w') {
@@ -493,6 +505,11 @@ function animate() {
 
     ghosts.forEach(ghost => {
         ghost.update()
+
+        if (Math.hypot(ghost.position.x - player.position.x, ghost.position.y - player.position.y) < ghost.radius + player.radius) {
+            cancelAnimationFrame(animationId)
+            console.log('you lose')
+        }
 
         const collisions = []
         boundries.forEach(boundary => {
