@@ -48,12 +48,14 @@ class Player {
 }
 
 class Ghost {
+    static speed = 2
     constructor({ position, velocity, color = 'red' }) {
         this.position = position
         this.velocity = velocity
         this.radius = 15
         this.color = color
         this.prevCollisions = []
+        this.speed = 2
     }
     draw() {
         c.beginPath()
@@ -92,7 +94,7 @@ const ghosts = [
             y: Boundary.height + Boundary.height / 2
         },
         velocity: {
-            x: 5,
+            x: Ghost.speed,
             y: 0
         }
     })
@@ -360,11 +362,12 @@ function circleCollideWithRectangle({
     circle,
     rectangle
 }) {
+    const padding = Boundary.width / 2 - circle.radius - 1
     return (
-        circle.position.y - circle.radius + circle.velocity.y <= rectangle.position.y + rectangle.height &&
-        circle.position.x + circle.radius + circle.velocity.x >= rectangle.position.x &&
-        circle.position.y + circle.radius + circle.velocity.y >= rectangle.position.y &&
-        circle.position.x - circle.radius + circle.velocity.x <= rectangle.position.x + rectangle.width
+        circle.position.y - circle.radius + circle.velocity.y <= rectangle.position.y + rectangle.height + padding &&
+        circle.position.x + circle.radius + circle.velocity.x >= rectangle.position.x - padding &&
+        circle.position.y + circle.radius + circle.velocity.y >= rectangle.position.y - padding &&
+        circle.position.x - circle.radius + circle.velocity.x <= rectangle.position.x + rectangle.width + padding
     )
 }
 
@@ -498,7 +501,7 @@ function animate() {
                 circleCollideWithRectangle({
                     circle: {
                         ...ghost, velocity: {
-                            x: 5,
+                            x: ghost.speed,
                             y: 0
                         }
                     },
@@ -512,7 +515,7 @@ function animate() {
                 circleCollideWithRectangle({
                     circle: {
                         ...ghost, velocity: {
-                            x: -5,
+                            x: -ghost.speed,
                             y: 0
                         }
                     },
@@ -527,7 +530,7 @@ function animate() {
                     circle: {
                         ...ghost, velocity: {
                             x: 0,
-                            y: -5
+                            y: -ghost.speed
                         }
                     },
                     rectangle: boundary
@@ -541,7 +544,7 @@ function animate() {
                     circle: {
                         ...ghost, velocity: {
                             x: 0,
-                            y: 5
+                            y: ghost.speed
                         }
                     },
                     rectangle: boundary
@@ -569,6 +572,34 @@ function animate() {
                 return !collisions.includes(collision)
             })
             console.log({ pathways })
+
+            const direction = pathways[Math.floor(Math.random() * pathways.length)]
+
+            console.log({ direction })
+
+            switch (direction) {
+                case 'down':
+                    ghost.velocity.y = ghost.speed
+                    ghost.velocity.x = 0
+                    break
+
+                case 'up':
+                    ghost.velocity.y = -ghost.speed
+                    ghost.velocity.x = 0
+                    break
+
+                case 'right':
+                    ghost.velocity.y = 0
+                    ghost.velocity.x = ghost.speed
+                    break
+
+                case 'left':
+                    ghost.velocity.y = 0
+                    ghost.velocity.x = -ghost.speed
+                    break
+            }
+
+            ghost.prevCollisions = []
         }
         // console.log(collisions)
     })
