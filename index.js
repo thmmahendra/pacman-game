@@ -503,6 +503,28 @@ function animate() {
         }
     }
 
+    // detect collision between ghost & player
+    for (let i = ghosts.length - 1; 0 <= i; i--) {
+        const ghost = ghosts[i]
+
+        // ghost touches player
+        if (Math.hypot(ghost.position.x - player.position.x, ghost.position.y - player.position.y) < ghost.radius + player.radius) {
+
+            if (ghost.scared) {
+                ghosts.splice(i, 1)
+            } else {
+                cancelAnimationFrame(animationId)
+                console.log('you lose')
+            }
+        }
+    }
+
+    // win condition lies here
+    if (pellets.length === 0) {
+        console.log('you win')
+        cancelAnimationFrame(animationId)
+    }
+
     // power ups here
     for (let i = powerUps.length - 1; 0 <= i; i--) {
         const powerUp = powerUps[i]
@@ -552,12 +574,6 @@ function animate() {
 
     ghosts.forEach(ghost => {
         ghost.update()
-
-        // ghost touches player
-        if (Math.hypot(ghost.position.x - player.position.x, ghost.position.y - player.position.y) < ghost.radius + player.radius) {
-            cancelAnimationFrame(animationId)
-            console.log('you lose')
-        }
 
         const collisions = []
         boundries.forEach(boundary => {
