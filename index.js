@@ -56,11 +56,12 @@ class Ghost {
         this.color = color
         this.prevCollisions = []
         this.speed = 2
+        this.scared = false
     }
     draw() {
         c.beginPath()
         c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
-        c.fillStyle = this.color
+        c.fillStyle = this.scared ? 'blue' : this.color
         c.fill()
         c.closePath()
     }
@@ -85,8 +86,23 @@ class Pellet {
     }
 }
 
+class PowerUp {
+    constructor({ position }) {
+        this.position = position
+        this.radius = 8
+    }
+    draw() {
+        c.beginPath()
+        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
+        c.fillStyle = 'white'
+        c.fill()
+        c.closePath()
+    }
+}
+
 const pellets = []
 const boundries = []
+const powerUps = []
 const ghosts = [
     new Ghost({
         position: {
@@ -365,6 +381,17 @@ map.forEach((row, i) => {
                     })
                 )
                 break
+
+            case 'p':
+                powerUps.push(
+                    new PowerUp({
+                        position: {
+                            x: j * Boundary.width + Boundary.width / 2,
+                            y: i * Boundary.height + Boundary.height / 2
+                        }
+                    })
+                )
+                break
         }
     })
 })
@@ -476,8 +503,28 @@ function animate() {
         }
     }
 
+    // power ups here
+    for (let i = powerUps.length - 1; 0 <= i; i--) {
+        const powerUp = powerUps[i]
+        powerUp.draw()
+
+        // player collides with powerup
+        if (Math.hypot(powerUp.position.x - player.position.x, powerUp.position.y - player.position.y) < powerUp.radius + player.radius) {
+            powerUps.splice(i, 1)
+
+            // make ghosts scared
+            ghosts.forEach(ghost => {
+                ghost.scared = true
+
+                setTimeout(() => {
+                    ghost.scared = false
+                }, 5000)
+            })
+        }
+    }
+
     // touch pallets for score
-    for (let i = pellets.length - 1; 0 < i; i--) {
+    for (let i = pellets.length - 1; 0 <= i; i--) {
         const pellet = pellets[i]
 
         pellet.draw()
@@ -506,6 +553,7 @@ function animate() {
     ghosts.forEach(ghost => {
         ghost.update()
 
+        // ghost touches player
         if (Math.hypot(ghost.position.x - player.position.x, ghost.position.y - player.position.y) < ghost.radius + player.radius) {
             cancelAnimationFrame(animationId)
             console.log('you lose')
